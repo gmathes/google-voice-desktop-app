@@ -76,6 +76,21 @@ ipcMain.on('pref-change', (e, theme) => {
     store.set('prefs', prefs);
 });
 
+ipcMain.on('tray-change', (e, traySwitch) => {
+    const prefs = store.get('prefs') || {};
+    prefs.tray = traySwitch;
+    store.set('prefs', prefs);
+    if (process.platform === 'darwin') {
+        console.log(traySwitch);
+        if (traySwitch == 'off') {
+            app.dock.hide();
+        }
+        else {
+            app.dock.show();
+        }
+    }
+});
+
 // Show window when clicking on macosx dock icon
 app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
